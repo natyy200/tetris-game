@@ -57,18 +57,66 @@ document.addEventListener("DOMContentLoaded", () => {
         Z:"green",
     }
 
+    const grid = 30;
+    const rows = canvas.height / grid;
+    const columns = canvas.width / grid; 
+
+    const board = Array.from({length: rows}, ()=>Array(columns).fill(0));
+
     let isGameRunning = false;
     let timerId;
     let score = 0;
 
     window.addEventListener("keydown", (e) => {
-        if(e.key == "" || e.code == "Space" || e.keyCode == "32") {
+        if((e.key == "" || e.code == "Space" || e.keyCode == "32") && !isGameRunning) {
+            isGameRunning = true;
             newTetromino();
+            draw();
         };
     });
 
     function newTetromino() {
         const types = Object.keys(tetrominoes);
         const type = types[Math.floor(Math.random() * types.length)];
+
+        currentTetromino = {
+            shape: tetrominoes[type],
+            x: Math.floor(columns / 2) - Math.floor(tetrominoes[type][0].length / 2),
+            y: 0,
+            type,
+        };
+        console.log(columns, currentTetromino);
+    };
+
+    function draw() {
+        if(isGameRunning) {
+            drawBoard();
+            drawTetromino(
+                currentTetromino.shape, 
+                currentTetromino.x, 
+                currentTetromino.y
+            );
+        };
+    };
+
+    function drawBoard() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    function drawSquare(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x*grid, y*grid, grid, grid);
+        ctx.strokeStyle = "#333";
+        ctx.strokeRect(x*grid, y*grid, grid, grid);
+    };
+
+    function drawTetromino(tetromino, offSetX, offSetY){
+        tetromino.forEach((row, y) => {
+            row.forEach((value, x)=>{
+                if(value){
+                    drawSquare(x+offSetX, y+offSetY, colors[currentTetromino.type]);
+                }
+            });
+        });
     };
 });
