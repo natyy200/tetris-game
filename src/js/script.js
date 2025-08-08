@@ -71,7 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if((e.key == "" || e.code == "Space" || e.keyCode == "32") && !isGameRunning) {
             isGameRunning = true;
             newTetromino();
-            draw();
+            
+            timerId = setInterval(gameLoop, 500);
         };
     });
 
@@ -86,6 +87,12 @@ document.addEventListener("DOMContentLoaded", () => {
             type,
         };
         console.log(columns, currentTetromino);
+    };
+
+    function gameLoop() {
+        if(isGameRunning) {
+            draw();
+        }
     };
 
     function draw() {
@@ -119,4 +126,46 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     };
+
+    document.addEventListener("keydown", (e)=>{
+        if(isGameRunning){
+            if(e.key === "ArrowLeft"){
+                moveLeft();
+            }else if(e.key === "ArrowRight"){
+                moveRight();
+            }else if(e.key === "ArrowDown"){
+                moveDown();
+            }else if(e.key === "ArrowUp"){
+                rotateTetromino();
+            }
+        }
+    });
+
+    function collisionDetection(tetromino, offSetX, offSetY){
+        return tetromino.some((row, y) => {
+            return row.some((value, x)=> {
+                if(value) {
+                    const newX = x + offSetX;
+                    const newY = y + offSetY;
+                    return(newX<0 || newX>=columns || newY>=rows || board[newX][newY]);
+                }
+                return false;
+            })
+        })
+    }
+
+    function moveLeft(){
+        if(!collisionDetection(currentTetromino.shape, currentTetromino.x-1, currentTetromino.y)) {
+        currentTetromino.x--;
+        }
+    }
+    function moveRight(){
+        currentTetromino.x++;
+    }
+    function moveDown(){
+        currentTetromino.y++;
+    }
+    function rotateTetromino(){
+
+    }
 });
