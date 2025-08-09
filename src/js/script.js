@@ -155,15 +155,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function moveLeft(){
-        if(!collisionDetection(currentTetromino.shape, currentTetromino.x-1, currentTetromino.y)) {
-        currentTetromino.x--;
+        if(!collisionDetection(currentTetromino.shape, currentTetromino.x - 1, currentTetromino.y)) {
+            currentTetromino.x--;
         }
     }
     function moveRight(){
-        currentTetromino.x++;
+        if(!collisionDetection(currentTetromino.shape, currentTetromino.x + 1, currentTetromino.y)) {
+            currentTetromino.x++;
+        }
     }
     function moveDown(){
-        currentTetromino.y++;
+        if(!collisionDetection(currentTetromino.shape, currentTetromino.x, currentTetromino.y + 1)) {
+            currentTetromino.y++;
+        }
     }
     function rotateTetromino(){
 
